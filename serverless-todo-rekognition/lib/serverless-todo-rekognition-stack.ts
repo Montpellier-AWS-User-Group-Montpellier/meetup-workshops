@@ -1,16 +1,27 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import {Stack, StackProps} from 'aws-cdk-lib';
+import {Construct} from 'constructs';
+import {Database} from "./database-construct";
+import {API} from "./api-construct";
 
 export class ServerlessTodoRekognitionStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
+    private readonly db: Database;
+    private readonly api: API;
 
-    // The code that defines your stack goes here
+    constructor(scope: Construct, id: string, props?: StackProps) {
+        super(scope, id, props);
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'ServerlessTodoRekognitionQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
-  }
+        // The code that defines your stack goes here
+
+        this.db = new Database(this, 'task')
+        this.api = new API(this, 'api')
+        this.configure()
+    }
+
+    private configure() {
+        this.api.setEnvironment({
+            TASKS_TABLE: this.db.table.tableName,
+            REGION: 'us-west-2'
+        })
+        this.db.table.grantReadWriteData(this.api.createTaskLambda)
+    }
 }
