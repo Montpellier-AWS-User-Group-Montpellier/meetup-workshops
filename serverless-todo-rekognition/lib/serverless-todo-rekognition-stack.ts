@@ -11,7 +11,6 @@ export class ServerlessTodoRekognitionStack extends Stack {
         super(scope, id, props);
 
         // The code that defines your stack goes here
-
         this.db = new Database(this, 'task')
         this.api = new API(this, 'api')
         this.configure()
@@ -20,7 +19,8 @@ export class ServerlessTodoRekognitionStack extends Stack {
     private configure() {
         this.api.setEnvironment({
             TASKS_TABLE: this.db.table.tableName,
-            REGION: 'us-west-2'
+            REGION: 'us-west-2',
+            SECRET: 'secret'
         })
         this.db.table.grantReadWriteData(this.api.createTaskLambda)
     }
