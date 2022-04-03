@@ -12,6 +12,8 @@ import {CfnOutput} from "aws-cdk-lib";
 
 export class API extends Construct {
     public readonly createTaskLambda: NodejsFunction;
+    public readonly getTaskLambda: NodejsFunction;
+    public readonly getTasksLambda: NodejsFunction;
     public readonly api: RestApi;
     private readonly authorizer: NodejsFunction;
     private lambdaEnvironment: { [key: string]: string }
@@ -27,6 +29,8 @@ export class API extends Construct {
         });
         this.authorizer = this.createLambda('authorizer', 'authorizer/index.ts')
         this.createTaskLambda = this.createLambda('create-task', 'create-task/index.ts')
+        this.getTaskLambda = this.createLambda('get-task', 'get-task/index.ts')
+        this.getTasksLambda = this.createLambda('get-tasks', 'get-tasks/index.ts')
         this.addTaskResources()
         new Deployment(this, 'Deployment', {api: this.api});
         new CfnOutput(this, 'endpoint', {value: this.api.url})
