@@ -23,5 +23,7 @@ export class ServerlessTodoRekognitionStack extends Stack {
             SECRET: 'secret'
         })
         this.db.table.grantReadWriteData(this.api.createTaskLambda)
+        this.db.table.grantReadData(this.api.getTaskLambda)
+        this.db.table.grantReadData(this.api.getTasksLambda)
     }
 }
