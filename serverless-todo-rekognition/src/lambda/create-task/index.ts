@@ -8,7 +8,7 @@ const ddbClient = new DynamoDBClient({
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient)
 const tableName = process.env.TASKS_TABLE
 
-exports.handler = async (event: any) => {
+export const handler = async (event: any) => {
     console.info('received:', event)
 
     const body = JSON.parse(event.body)

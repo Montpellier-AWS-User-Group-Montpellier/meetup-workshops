@@ -1,29 +1,40 @@
-import {Stack, StackProps} from 'aws-cdk-lib';
+import {Fn, Stack, StackProps} from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import {Database} from "./database-construct";
 import {API} from "./api-construct";
+import {Storage} from "./storage-construct";
+import {EventType} from "aws-cdk-lib/aws-s3";
+import {LambdaDestination} from "aws-cdk-lib/aws-s3-notifications";
 
 export class ServerlessTodoRekognitionStack extends Stack {
     private readonly db: Database;
     private readonly api: API;
+    private readonly storage: Storage;
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        // The code that defines your stack goes here
         this.db = new Database(this, 'task')
-        this.api = new API(this, 'api')
+        this.storage = new Storage(this, 'storage', {
+            uid: Fn.select(0, Fn.split('-', Fn.select(2, Fn.split('/', this.stackId))))
+        });
+        this.api = new API(this, 'api', {
+            tasks_table: this.db.table.tableName,
+            region: 'us-west-2',
+            secret: 'secret',
+            uploadBucket: this.storage.bucket.bucketName
+        })
         this.configure()
     }
 
     private configure() {
-        this.api.setEnvironment({
-            TASKS_TABLE: this.db.table.tableName,
-            REGION: 'us-west-2',
-            SECRET: 'secret'
-        })
-        this.db.table.grantReadWriteData(this.api.createTaskLambda)
-        this.db.table.grantReadData(this.api.getTaskLambda)
-        this.db.table.grantReadData(this.api.getTasksLambda)
+        this.db.table.grantReadWriteData(this.api.createTaskFn)
+        this.db.table.grantReadData(this.api.getTaskFn)
+        this.db.table.grantReadData(this.api.getTasksFn)
+        this.db.table.grantReadWriteData(this.api.deleteTaskFn)
+        this.db.table.grantReadWriteData(this.api.detectLabelsFn);
+        this.storage.bucket.grantWrite(this.api.getSignedUrlFn);
+        this.storage.bucket.grantRead(this.api.detectLabelsFn);
+        this.storage.bucket.addEventNotification(EventType.OBJECT_CREATED, new LambdaDestination(this.api.detectLabelsFn));
     }
 }

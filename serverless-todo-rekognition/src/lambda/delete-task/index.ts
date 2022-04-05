@@ -1,5 +1,6 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb'
+import {DynamoDBClient} from '@aws-sdk/client-dynamodb'
+import {DeleteCommand, DynamoDBDocumentClient} from '@aws-sdk/lib-dynamodb'
+
 const ddbClient = new DynamoDBClient({
     region: process.env.REGION
 })
@@ -10,27 +11,22 @@ export const handler = async (event: any) => {
     console.info('received:', event)
 
     const user = event.requestContext.authorizer.principalId
+    const id = event.pathParameters.id
+
     const params = {
         TableName: tableName,
-        KeyConditionExpression: '#u = :u',
-        ExpressionAttributeNames: {
-            '#u': 'user'
-        },
-        ExpressionAttributeValues: {
-            ':u': `user#${user}`
-        }
+        Key: {user: `user#${user}`, id: `task#${id}`}
     }
 
-    console.info(`Querying table ${tableName}`)
-    const data = await ddbDocClient.send(new QueryCommand(params))
-    console.log('Success. Item details: ', data.Items)
+    console.log(`Deleting task: ${id} for user ${user}`)
+    const data = await ddbDocClient.send(new DeleteCommand(params))
 
     const response = {
         statusCode: 200,
         headers: {
             'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify(data.Items)
+        body: JSON.stringify(data)
     }
 
     console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`)

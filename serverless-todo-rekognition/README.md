@@ -15,7 +15,7 @@ browser sends and receives data from a public backend API built using Lambda and
 persistence layer where data can be stored by the API's Lambda function. S3 is used to store uploaded images. Finally,
 Amazon Rekognition is used to detect and label objects in those images.
 
-![architecture](assets/architecture.svg)
+![architecture](assets/architecture.png)
 
 ### Modules
 This workshop is divided into multiple steps. Each step describes a scenario of what we're going to build and step-by-step directions to help you implement the architecture and verify your work. The steps must be performed in order for the workshop to be successful.
