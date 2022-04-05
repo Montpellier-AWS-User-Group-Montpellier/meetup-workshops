@@ -21,3 +21,27 @@ npm run serve
 ```sh
 npm run build
 ```
+
+### Install latest version of Amplify CLI
+
+```sh
+npm i -g @aws-amplify/cli
+```
+
+### Initialize Amplify
+
+```sh
+amplify init
+```
+
+### Add hosting
+
+```sh
+amplify add hosting
+```
+
+### Publish app
+
+```sh
+amplify publish
+```

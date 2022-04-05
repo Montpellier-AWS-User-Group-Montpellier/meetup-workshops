@@ -22,11 +22,9 @@ This workshop is divided into multiple steps. Each step describes a scenario of 
 
 - [Install prerequisites](#prerequisites)
 - [Build a serverless backend](assets/serverless-backend.md)
-- Configure a Lambda Authorizer
-- Build and deploy the web application
-- Test the application
-- Configure Amazon Rekognition Integration
-- Terminate Resources
+- [Build and deploy the web application](webapp/README.md)
+- [Configure Amazon Rekognition Integration](assets/rekognition.md)
+- [Terminate Resources](assets/terminate-resources.md)
 
 ## Getting started
 

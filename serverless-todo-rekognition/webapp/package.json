@@ -1,5 +1,5 @@
 {
-  "name": "getting-started-serverless",
+  "name": "serverless-todo-rekognition",
   "version": "0.1.0",
   "private": true,
   "scripts": {
