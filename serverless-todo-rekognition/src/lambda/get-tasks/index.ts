@@ -12,12 +12,12 @@ export const handler = async (event: any) => {
     const user = event.requestContext.authorizer.principalId
     const params = {
         TableName: tableName,
-        KeyConditionExpression: '#u = :u',
+        KeyConditionExpression: '#PK = :user',
         ExpressionAttributeNames: {
-            '#u': 'user'
+            '#PK': 'PK'
         },
         ExpressionAttributeValues: {
-            ':u': `user#${user}`
+            ':user': `user#${user}`
         }
     }
 

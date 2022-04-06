@@ -22,8 +22,8 @@ export const handler = async (event: any) => {
     const params = {
         TableName: tableName,
         Item: {
-            user: `user#${user}`,
-            id: `task#${id}`,
+            PK: `user#${user}`,
+            SK: `task#${id}`,
             title: title,
             body: bodyText,
             dueDate: dueDate,

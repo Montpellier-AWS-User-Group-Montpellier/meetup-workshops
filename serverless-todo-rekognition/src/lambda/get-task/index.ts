@@ -15,7 +15,7 @@ export const handler = async (event: any) => {
 
     const params = {
         TableName: tableName,
-        Key: { user: `user#${user}`, id: `task#${id}` }
+        Key: { PK: `user#${user}`, SK: `task#${id}` }
     }
 
     console.log(`Getting task: ${params}`)

@@ -12,12 +12,11 @@ export const handler = async (event: any) => {
     const bucket = event.Records[0].s3.bucket.name
     const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
 
-    const user = key.split('/')[0]
-    const taskId = key.split('/')[1]
+    const [user, taskId] = key.split('/')
 
     const command = new UpdateCommand({
         TableName: tableName,
-        Key: { user: `user#${user}`, id: `task#${taskId}` },
+        Key: { PK: `user#${user}`, SK: `task#${taskId}` },
         UpdateExpression: 'SET upload = :u',
         ExpressionAttributeValues: {
             ':u': `s3://${bucket}/${key}`
@@ -51,17 +50,15 @@ export const handler = async (event: any) => {
         new DetectLabelsCommand(imageParams)
     )
     console.log('Success, labels detected.', labelData)
-    const labels = []
-    for (let j = 0; j < labelData.Labels.length; j++) {
-        const name = labelData.Labels[j].Name
-        labels.push(name)
-    }
+    const labels = labelData.Labels.map((label: any) => {
+        return label.Name
+    })
 
     console.log(`Label data: ${JSON.stringify(labels)}`)
 
     const updateLabelsCommand = new UpdateCommand({
         TableName: tableName,
-        Key: { user: `user#${user}`, id: `task#${taskId}` },
+        Key: { PK: `user#${user}`, SK: `task#${taskId}` },
         UpdateExpression: 'SET labels = :s',
         ExpressionAttributeValues: {
             ':s': labels
@@ -78,12 +75,11 @@ export const handler = async (event: any) => {
         throw err
     }
 
-    const response = {
+    return {
         statusCode: 200,
         headers: {
             'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify(labels)
     }
-    return response
 }

@@ -146,7 +146,7 @@ import {Construct} from 'constructs';
 import {Database} from "./database-construct";
 import {API} from "./api-construct";
 
-export class TestStack extends Stack {
+export class ServerlessTodoRekognitionStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -524,7 +524,7 @@ import {Construct} from 'constructs';
 import {Database} from "./database-construct";
 import {API} from "./api-construct";
 
-export class TestStack extends Stack {
+export class ServerlessTodoRekognitionStack extends Stack {
     private readonly db: Database;
     private readonly api: API;
 
@@ -554,7 +554,7 @@ import {Construct} from 'constructs';
 import {Database} from "./database-construct";
 import {API} from "./api-construct";
 
-export class TestStack extends Stack {
+export class ServerlessTodoRekognitionStack extends Stack {
     private readonly db: Database;
     private readonly api: API;
 

@@ -51,7 +51,7 @@ import {Database} from "./database-construct";
 import {API} from "./api-construct";
 import {Storage} from "./storage-construct";
 
-export class TestStack extends Stack {
+export class ServerlessTodoRekognitionStack extends Stack {
     private readonly db: Database;
     private readonly api: API;
     private readonly storage: Storage;
